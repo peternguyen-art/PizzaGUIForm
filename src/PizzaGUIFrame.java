@@ -49,6 +49,12 @@ public class PizzaGUIFrame extends JFrame {
     JButton clearBtn;
     JButton quitBtn;
 
+    double basePrice;
+    double toppingPrice;
+    double subTotalPrice;
+    double tax;
+    double totalPrice;
+
     public PizzaGUIFrame() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
@@ -147,6 +153,7 @@ public class PizzaGUIFrame extends JFrame {
         sizeCombo.addItem("Small");
         sizeCombo.addItem("Medium");
         sizeCombo.addItem("Large");
+        sizeCombo.addItem("Super");
 
         String selectedSize = Objects.requireNonNull(sizeCombo.getSelectedItem()).toString();
 
@@ -226,34 +233,51 @@ public class PizzaGUIFrame extends JFrame {
                 }
 
                 String chosenSize = Objects.requireNonNull(sizeCombo.getSelectedItem()).toString();
+                if (chosenSize.equals("Small")) {
+                    basePrice = 8.00;
+                }else if (chosenSize.equals("Medium")) {
+                    basePrice = 12.00;
+                }else if (chosenSize.equals("Large")) {
+                    basePrice = 16.00;
+                }else if (chosenSize.equals("Super")) {
+                    basePrice = 20.00;
+                }
 
                 ArrayList<String> chosenToppings = new ArrayList<>();
                 if (cheeseCheckBox.isSelected()) {
                     chosenToppings.add("Cheese");
+                    toppingPrice += 1.00;
                 }
                 if  (fingersCheckBox.isSelected()) {
                     chosenToppings.add("Fingers");
+                    toppingPrice += 1.00;
                 }
                 if (pineappleCheckBox.isSelected()) {
                     chosenToppings.add("Pineapple");
+                    toppingPrice += 1.00;
                 }
                 if (toesCheckBox.isSelected()) {
                     chosenToppings.add("Toes");
+                    toppingPrice += 1.00;
                 }
                 if (snailsCheckBox.isSelected()) {
                     chosenToppings.add("Snails");
+                    toppingPrice += 1.00;
                 }
                 if (wormsCheckBox.isSelected()) {
                     chosenToppings.add("Worms");
+                    toppingPrice += 1.00;
                 }
 
-                String chosenToppingsString = String.join("\n", chosenToppings);
+                subTotalPrice = basePrice + toppingPrice;
+                tax = 0.07;
+                totalPrice = subTotalPrice - (subTotalPrice*tax);
 
                 receiptArea.setText("");
 
                 StringBuilder toppingsDisplay = new StringBuilder();
                 for (String topping : chosenToppings){
-                    toppingsDisplay.append("  + ").append(topping).append("\t\t\t\t Price \n");
+                    toppingsDisplay.append("  + ").append(topping).append("\t\t\t\t" + toppingPrice + "\n");
                 }
 
                 receiptArea.append(
@@ -261,16 +285,15 @@ public class PizzaGUIFrame extends JFrame {
                                 "\t\t🍕 PIZZA RECEIPT 🍕\t\t\n" +
                                 "=======================================================\n" +
                                 "\n" +
-                                chosenCrust + " (" + chosenSize + ")\t\t\t[Base Price]\n" +
-                                "\n" +
+                                chosenCrust + " (" + chosenSize + ")\t\t\t" + basePrice + "\n" +
                                 "EXTRA TOPPINGS:\n" +
                                 toppingsDisplay +
                                 "\n" +
                                 "---------------------------------------------------------------------------------------------------\n" +
-                                 "Sub-total:\t\t\t\t" + "[Amount]\n" +
-                                 "Tax:\t\t\t\t" + "[Amount]\n" +
+                                 "Sub-total:\t\t\t\t" + subTotalPrice + "\n" +
+                                 "Tax:\t\t\t\t" + tax + "\n" +
                                 "---------------------------------------------------------------------------------------------------\n" +
-                                "TOTAL DUE:\t\t\t\t" + "[Total]\n" +
+                                "TOTAL DUE:\t\t\t\t" + totalPrice + "\n" +
                                 "=======================================================\n"
                 );
             }
