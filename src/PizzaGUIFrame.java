@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class PizzaGUIFrame extends JFrame {
@@ -62,7 +63,7 @@ public class PizzaGUIFrame extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
-        setSize(500, 500);
+        setSize(700, 800);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -189,7 +190,7 @@ public class PizzaGUIFrame extends JFrame {
     private void createReceiptPnl() {
         receiptPanel = new JPanel();
 
-        receiptArea = new JTextArea(10,25);
+        receiptArea = new JTextArea(20,40);
         scrollPane = new JScrollPane(receiptArea);
         receiptArea.setEditable(false);
 
@@ -218,12 +219,60 @@ public class PizzaGUIFrame extends JFrame {
                 }  else if (deepDishBtn.isSelected()) {
                     chosenCrust = "Deep Dish";
                 } else{
-                    JOptionPane.showMessageDialog(null, "Please choose either Thin or Regular, Deep Dish");
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Please choose either Thin or Regular, Deep Dish");
+                    return;
                 }
 
                 String chosenSize = Objects.requireNonNull(sizeCombo.getSelectedItem()).toString();
 
+                ArrayList<String> chosenToppings = new ArrayList<>();
+                if (cheeseCheckBox.isSelected()) {
+                    chosenToppings.add("Cheese");
+                }
+                if  (fingersCheckBox.isSelected()) {
+                    chosenToppings.add("Fingers");
+                }
+                if (pineappleCheckBox.isSelected()) {
+                    chosenToppings.add("Pineapple");
+                }
+                if (toesCheckBox.isSelected()) {
+                    chosenToppings.add("Toes");
+                }
+                if (snailsCheckBox.isSelected()) {
+                    chosenToppings.add("Snails");
+                }
+                if (wormsCheckBox.isSelected()) {
+                    chosenToppings.add("Worms");
+                }
 
+                String chosenToppingsString = String.join("\n", chosenToppings);
+
+                receiptArea.setText("");
+
+                StringBuilder toppingsDisplay = new StringBuilder();
+                for (String topping : chosenToppings){
+                    toppingsDisplay.append("  + ").append(topping).append("\t\t\t\t Price \n");
+                }
+
+                receiptArea.append(
+                        "=======================================================\n" +
+                                "\t\t🍕 PIZZA RECEIPT 🍕\t\t\n" +
+                                "=======================================================\n" +
+                                "\n" +
+                                chosenCrust + " (" + chosenSize + ")\t\t\t[Base Price]\n" +
+                                "\n" +
+                                "EXTRA TOPPINGS:\n" +
+                                toppingsDisplay +
+                                "\n" +
+                                "---------------------------------------------------------------------------------------------------\n" +
+                                 "Sub-total:\t\t\t\t" + "[Amount]\n" +
+                                 "Tax:\t\t\t\t" + "[Amount]\n" +
+                                "---------------------------------------------------------------------------------------------------\n" +
+                                "TOTAL DUE:\t\t\t\t" + "[Total]\n" +
+                                "=======================================================\n"
+                );
             }
         };
 
@@ -239,6 +288,8 @@ public class PizzaGUIFrame extends JFrame {
                 }
             }
         };
+
+        orderBtn.addActionListener(orderListener);
         quitBtn.addActionListener(exitListener);
 
         buttonPanel.add(orderBtn);
