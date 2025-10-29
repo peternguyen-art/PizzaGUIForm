@@ -155,17 +155,6 @@ public class PizzaGUIFrame extends JFrame {
         sizeCombo.addItem("Large");
         sizeCombo.addItem("Super");
 
-        String selectedSize = Objects.requireNonNull(sizeCombo.getSelectedItem()).toString();
-
-        sizeCombo.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    sizeCombo.setSelectedItem(selectedSize);
-                }
-            }
-        });
-
         sizeCombo.setSelectedIndex(0);
         sizeCombo.setEditable(false);
 
@@ -299,6 +288,12 @@ public class PizzaGUIFrame extends JFrame {
             }
         };
 
+        ActionListener clearListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clearForm();
+            }
+        };
+
         ActionListener exitListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int formExit = JOptionPane.showConfirmDialog
@@ -312,6 +307,7 @@ public class PizzaGUIFrame extends JFrame {
             }
         };
 
+        clearBtn.addActionListener(clearListener);
         orderBtn.addActionListener(orderListener);
         quitBtn.addActionListener(exitListener);
 
@@ -320,4 +316,20 @@ public class PizzaGUIFrame extends JFrame {
         buttonPanel.add(quitBtn);
     }
 
+    public void clearForm(){
+        thinBtn.setSelected(false);
+        regBtn.setSelected(false);
+        deepDishBtn.setSelected(false);
+
+        cheeseCheckBox.setSelected(false);
+        fingersCheckBox.setSelected(false);
+        pineappleCheckBox.setSelected(false);
+        toesCheckBox.setSelected(false);
+        snailsCheckBox.setSelected(false);
+        wormsCheckBox.setSelected(false);
+
+        sizeCombo.setSelectedItem(null);
+
+        receiptArea.setText("");
+    }
 }
