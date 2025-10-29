@@ -1,12 +1,20 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+
+import static java.lang.System.exit;
 
 public class PizzaGUIFrame extends JFrame {
     JPanel mainPanel;
 
+    JPanel titlePanel;
+    JLabel titleLbl;
     JPanel optionPanel;
     GroupLayout groupLayout;
+
+    JPanel centerPanel;
 
     TitledBorder crustBorder;
     JPanel crustPanel;
@@ -17,6 +25,7 @@ public class PizzaGUIFrame extends JFrame {
 
     TitledBorder sizesBorder;
     JPanel sizesPanel;
+    String[] sizes = {};
     JComboBox<String> sizeCombo;
 
     TitledBorder toppingBorder;
@@ -28,7 +37,8 @@ public class PizzaGUIFrame extends JFrame {
     JCheckBox snailsCheckBox;
     JCheckBox wormsCheckBox;
 
-    JTextField receiptField;
+    JPanel receiptPanel;
+    JTextArea receiptArea;
     JScrollPane scrollPane;
 
     JPanel buttonPanel;
@@ -40,8 +50,14 @@ public class PizzaGUIFrame extends JFrame {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        createOptionPnl();
-        mainPanel.add(optionPanel, BorderLayout.NORTH);
+        createTitlePanel();
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+
+        createCenterPnl();
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        createButtonPanel();
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
         setSize(500, 500);
@@ -49,13 +65,32 @@ public class PizzaGUIFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private void createTitlePanel()
+    {
+        titlePanel = new JPanel();
+        titleLbl = new JLabel("Peter's Pizzeria Order Form");
+        titleLbl.setFont(new Font("", Font.BOLD,18));
+        titlePanel.add(titleLbl);
+    }
+
+    private void createCenterPnl()
+    {
+        centerPanel = new JPanel();
+        centerPanel.setLayout(new GridLayout(2,1));
+
+        createOptionPnl();
+        centerPanel.add(optionPanel);
+
+        createReceiptPnl();
+        centerPanel.add(receiptPanel);
+    }
+
     private void createOptionPnl() {
         optionPanel = new JPanel();
-        optionPanel.setLayout(new GridLayout(1, 2));
 
-//        createCrustPnl();
-//        createSizesPnl();
-//        createToppingPnl();
+        createCrustPnl();
+        createSizesPnl();
+        createToppingPnl();
 
         groupLayout = new GroupLayout(optionPanel);
         optionPanel.setLayout(groupLayout);
@@ -64,24 +99,28 @@ public class PizzaGUIFrame extends JFrame {
         groupLayout.setAutoCreateContainerGaps(true);
 
         groupLayout.setHorizontalGroup(
-                groupLayout.createParallelGroup()
-                        .addComponent(crustPanel)
-                        .addComponent(sizesPanel)
-                        .addGroup(groupLayout.createSequentialGroup()
-                                .addComponent(toppingPanel)));
+                groupLayout.createSequentialGroup()
+                        .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(crustPanel)
+                                .addComponent(sizesPanel))
+                        .addComponent(toppingPanel)
+
+        );
 
         groupLayout.setVerticalGroup(
-                groupLayout.createSequentialGroup().
-                        addGroup(groupLayout.createSequentialGroup()
+                groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(groupLayout.createSequentialGroup()
                                 .addComponent(crustPanel)
                                 .addComponent(sizesPanel))
                         .addComponent(toppingPanel)
         );
     }
 
-    private void createCrustPanel() {
+    private void createCrustPnl() {
         crustPanel = new JPanel();
+        crustPanel.setLayout(new GridLayout(3,1 ));
         crustBorder = BorderFactory.createTitledBorder("Choose your crust");
+        crustBorder.setTitleFont(new Font("", Font.BOLD, 14));
         crustPanel.setBorder(crustBorder);
 
         thinBtn = new JRadioButton("Thin");
@@ -89,5 +128,76 @@ public class PizzaGUIFrame extends JFrame {
         deepDishBtn = new JRadioButton("Deep Dish");
 
         radioButtonGroup = new ButtonGroup();
+
+        crustPanel.add(thinBtn);
+        crustPanel.add(regBtn);
+        crustPanel.add(deepDishBtn);
     }
+
+    private void createSizesPnl() {
+        sizesPanel = new JPanel();
+        sizesBorder = BorderFactory.createTitledBorder("Choose your size");
+        sizesBorder.setTitleFont(new Font("", Font.BOLD, 14));
+        sizesPanel.setBorder(sizesBorder);
+
+        sizeCombo = new JComboBox<>(sizes);
+        sizeCombo.addItem("Small");
+        sizeCombo.addItem("Medium");
+        sizeCombo.addItem("Large");
+
+        sizeCombo.setSelectedIndex(0);
+        sizeCombo.setEditable(false);
+
+        sizesPanel.add(sizeCombo);
+    }
+
+    private void createToppingPnl() {
+        toppingPanel = new JPanel();
+        toppingPanel.setLayout(new GridLayout(6,1));
+        toppingBorder = BorderFactory.createTitledBorder("Choose your topping: 1$ each");
+        toppingBorder.setTitleFont(new Font("", Font.BOLD, 14));
+        toppingPanel.setBorder(toppingBorder);
+
+        cheeseCheckBox = new JCheckBox("Cheese");
+        fingersCheckBox = new JCheckBox("Fingers");
+        pineappleCheckBox = new JCheckBox("Pineapple");
+        toesCheckBox = new JCheckBox("Toes");
+        snailsCheckBox = new JCheckBox("Snails");
+        wormsCheckBox = new JCheckBox("Worms");
+
+        toppingPanel.add(cheeseCheckBox);
+        toppingPanel.add(fingersCheckBox);
+        toppingPanel.add(pineappleCheckBox);
+        toppingPanel.add(toesCheckBox);
+        toppingPanel.add(snailsCheckBox);
+        toppingPanel.add(wormsCheckBox);
+    }
+
+    private void createReceiptPnl() {
+        receiptPanel = new JPanel();
+
+        receiptArea = new JTextArea(10,25);
+        scrollPane = new JScrollPane(receiptArea);
+        receiptArea.setEditable(false);
+
+        receiptPanel.add(scrollPane);
+    }
+
+    private void createButtonPanel() {
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1,3,20,5));
+
+        EmptyBorder padding = new EmptyBorder(0,20,10,20);
+        buttonPanel.setBorder(padding);
+        orderBtn = new JButton("Order");
+        clearBtn = new JButton("Clear");
+        quitBtn = new JButton("Quit");
+
+        quitBtn.addActionListener((ActionEvent e) -> exit(0));
+
+        buttonPanel.add(orderBtn);
+        buttonPanel.add(clearBtn);
+        buttonPanel.add(quitBtn);
+    }
+
 }
