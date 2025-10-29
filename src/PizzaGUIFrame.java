@@ -137,6 +137,9 @@ public class PizzaGUIFrame extends JFrame {
         deepDishBtn = new JRadioButton("Deep Dish");
 
         radioButtonGroup = new ButtonGroup();
+        radioButtonGroup.add(thinBtn);
+        radioButtonGroup.add(regBtn);
+        radioButtonGroup.add(deepDishBtn);
 
         crustPanel.add(thinBtn);
         crustPanel.add(regBtn);
