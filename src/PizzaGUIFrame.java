@@ -3,8 +3,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import static java.lang.System.exit;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Objects;
 
 public class PizzaGUIFrame extends JFrame {
     JPanel mainPanel;
@@ -145,6 +147,17 @@ public class PizzaGUIFrame extends JFrame {
         sizeCombo.addItem("Medium");
         sizeCombo.addItem("Large");
 
+        String selectedSize = Objects.requireNonNull(sizeCombo.getSelectedItem()).toString();
+
+        sizeCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    sizeCombo.setSelectedItem(selectedSize);
+                }
+            }
+        });
+
         sizeCombo.setSelectedIndex(0);
         sizeCombo.setEditable(false);
 
@@ -193,7 +206,40 @@ public class PizzaGUIFrame extends JFrame {
         clearBtn = new JButton("Clear");
         quitBtn = new JButton("Quit");
 
-        quitBtn.addActionListener((ActionEvent e) -> exit(0));
+        ActionListener orderListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                String chosenCrust = "";
+
+                if (thinBtn.isSelected()) {
+                    chosenCrust = "Thin";
+                } else if (regBtn.isSelected()) {
+                    chosenCrust = "Regular";
+                }  else if (deepDishBtn.isSelected()) {
+                    chosenCrust = "Deep Dish";
+                } else{
+                    JOptionPane.showMessageDialog(null, "Please choose either Thin or Regular, Deep Dish");
+                }
+
+                String chosenSize = Objects.requireNonNull(sizeCombo.getSelectedItem()).toString();
+
+
+            }
+        };
+
+        ActionListener exitListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int formExit = JOptionPane.showConfirmDialog
+                        (null,
+                                "Do you want to exit the form",
+                                "Exit Form",
+                                JOptionPane.YES_NO_OPTION);
+                if (formExit == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
+            }
+        };
+        quitBtn.addActionListener(exitListener);
 
         buttonPanel.add(orderBtn);
         buttonPanel.add(clearBtn);
